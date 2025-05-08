@@ -1,63 +1,187 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const HeroSection = () => {
-  const [expanded, setExpanded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const videoRef = useRef(null);
+  
+  // Handle video loading and fade in
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadeddata', () => {
+        setIsLoaded(true);
+      });
+    }
+    
+    // Trigger animations after a small delay regardless of video load status
+    // as a fallback for slow connections
+    const timer = setTimeout(() => setIsLoaded(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const toggleMenu = () => {
-    setExpanded(!expanded);
+  // Text animation variants
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (custom) => ({
+      opacity: 1,
+      y: 0,
+      transition: { 
+        delay: custom * 0.2 + 0.3,
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1.0] // Custom easing curve
+      }
+    })
+  };
+  
+  // Button animation variants
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        delay: 1.1, 
+        duration: 0.5,
+        type: "spring",
+        stiffness: 150
+      }
+    },
+    hover: { 
+      scale: 1.05,
+      boxShadow: "0 10px 25px -5px rgba(219, 50, 70, 0.4)",
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 10 
+      }
+    },
+    tap: { scale: 0.98 }
+  };
+
+  // Divider animation
+  const dividerVariants = {
+    hidden: { width: "0%" },
+    visible: { 
+      width: "100%", 
+      transition: { 
+        delay: 0.7, 
+        duration: 1.2, 
+        ease: "easeInOut" 
+      }
+    }
   };
 
   return (
-    <div className="overflow-x-hidden bg-gray-50">
-     
+    <div className="relative w-full h-[80vh] overflow-hidden">
+      {/* Background video with optimized loading */}
+      <div className={`absolute inset-0 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        >
+          <source src="https://videos.pexels.com/video-files/7103565/7103565-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+          {/* Fallback image for browsers that don't support video */}
+          <img 
+            src="/api/placeholder/1920/1080" 
+            alt="Creative design workspace" 
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          />
+        </video>
+      </div>
 
-      <section className="pt-12 bg-gray-50 sm:pt-16">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h1 className="px-6 text-lg text-gray-600 font-inter">Smart email campaign builder, made for Developers</h1>
-            <p className="mt-5 text-4xl font-bold leading-tight text-gray-900 sm:leading-tight sm:text-5xl lg:text-6xl lg:leading-tight font-pj">
-              Turn your visitors into profitable
-              <span className="relative inline-flex sm:inline">
-                <span className="bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] blur-lg filter opacity-30 w-full h-full absolute inset-0"></span>
-                <span className="relative"> business </span>
-              </span>
-            </p>
+      {/* Dynamic gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70 z-10" />
 
-            <div className="px-8 sm:items-center sm:justify-center sm:px-0 sm:space-x-5 sm:flex mt-9">
-              <a
-                href="#"
-                title=""
-                className="inline-flex items-center justify-center w-full px-8 py-3 text-lg font-bold text-white transition-all duration-200 bg-gray-900 border-2 border-transparent sm:w-auto rounded-xl font-pj hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-                role="button"
-              >
-                Get more customers
-              </a>
+      {/* Wave SVG divider */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20">
+        <svg
+          viewBox="0 0 1440 320"
+          className="w-full h-20 md:h-32 fill-white"
+          preserveAspectRatio="none"
+        >
+          <motion.path 
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: 1, 
+              opacity: 1,
+              transition: { duration: 1.5, delay: 0.8, ease: "easeInOut" }
+            }}
+            d="M0,256L48,234.7C96,213,192,171,288,149.3C384,128,480,128,576,133.3C672,139,768,149,864,154.7C960,160,1056,160,1152,165.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" 
+            stroke="rgba(255,255,255,0.3)"
+            strokeWidth="2"
+          />
+        </svg>
+      </div>
+      
+      {/* Content container */}
+      <div className="relative z-20 flex flex-col items-center justify-center w-full h-full px-6 md:px-8">
+        <motion.div 
+          className="max-w-4xl text-center"
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+        >
+          {/* Creative brand signature */}
+          <motion.div 
+            custom={0}
+            variants={textVariants}
+            className="mb-3 text-xs md:text-sm tracking-widest text-white/80 uppercase font-light"
+          >
+            Where vision meets execution
+          </motion.div>
+          
+          {/* Main headline */}
+          <motion.h1 
+            custom={1}
+            variants={textVariants}
+            className="text-4xl md:text-5xl lg:text-4xl font-bold tracking-tight text-white"
+          >
+            Guava Creative Studio
+          </motion.h1>
 
-              <a
-                href="#"
-                title=""
-                className="inline-flex items-center justify-center w-full px-6 py-3 mt-4 text-lg font-bold text-gray-900 transition-all duration-200 border-2 border-gray-400 sm:w-auto sm:mt-0 rounded-xl font-pj focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 hover:bg-gray-900 focus:bg-gray-900 hover:text-white focus:text-white hover:border-gray-900 focus:border-gray-900"
-                role="button"
-              >
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 18 18" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M8.18003 13.4261C6.8586 14.3918 5 13.448 5 11.8113V5.43865C5 3.80198 6.8586 2.85821 8.18003 3.82387L12.5403 7.01022C13.6336 7.80916 13.6336 9.44084 12.5403 10.2398L8.18003 13.4261Z"
-                    strokeWidth="2"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Watch free demo
-              </a>
-            </div>
-
-            <p className="mt-8 text-base text-gray-500 font-inter">60 Days free trial · No credit card required</p>
+          {/* Animated divider */}
+          <div className="relative mt-4 max-w-sm mx-auto overflow-hidden">
+            <motion.div 
+              variants={dividerVariants}
+              className="h-px bg-gradient-to-r from-transparent via-white to-transparent"
+            />
           </div>
-        </div>   
-      </section>
+
+          {/* Compelling tagline */}
+          <motion.p 
+            custom={2}
+            variants={textVariants}
+            className="max-w-lg mx-auto mt-8 md:mt-10 text-sm font-light leading-relaxed text-white/90 md:text-base lg:text-lg"
+          >
+            We don't just design—we transform. Crafting digital experiences that captivate, 
+            convert, and create lasting emotional connections with your audience.
+          </motion.p>
+
+          {/* CTA button with animation */}
+          <motion.div 
+            className="mt-10 md:mt-14"
+            variants={textVariants}
+            custom={3}
+          >
+            <motion.button 
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
+              className="px-10 py-4 text-sm font-medium tracking-wider text-white uppercase transition-all duration-300 bg-[#db3246] rounded-full shadow-lg shadow-[#db3246]/20"
+            >
+              See Our Masterpieces
+            </motion.button>
+          </motion.div>
+          
+         
+        </motion.div>
+      </div>
     </div>
   );
 };
