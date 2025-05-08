@@ -1,189 +1,172 @@
-'use client';
+'use client'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-
-const HeroSection = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const videoRef = useRef(null);
-  
-  // Handle video loading and fade in
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.addEventListener('loadeddata', () => {
-        setIsLoaded(true);
-      });
-    }
-    
-    // Trigger animations after a small delay regardless of video load status
-    // as a fallback for slow connections
-    const timer = setTimeout(() => setIsLoaded(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Text animation variants
-  const textVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (custom) => ({
-      opacity: 1,
-      y: 0,
-      transition: { 
-        delay: custom * 0.2 + 0.3,
-        duration: 0.8,
-        ease: [0.25, 0.1, 0.25, 1.0] // Custom easing curve
-      }
-    })
-  };
-  
-  // Button animation variants
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { 
-        delay: 1.1, 
-        duration: 0.5,
-        type: "spring",
-        stiffness: 150
-      }
-    },
-    hover: { 
-      scale: 1.05,
-      boxShadow: "0 10px 25px -5px rgba(219, 50, 70, 0.4)",
-      transition: { 
-        type: "spring", 
-        stiffness: 400, 
-        damping: 10 
-      }
-    },
-    tap: { scale: 0.98 }
-  };
-
-  // Divider animation
-  const dividerVariants = {
-    hidden: { width: "0%" },
-    visible: { 
-      width: "100%", 
-      transition: { 
-        delay: 0.7, 
-        duration: 1.2, 
-        ease: "easeInOut" 
-      }
-    }
-  };
+export default function Hero() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <div className="relative w-full h-[80vh] overflow-hidden">
-      {/* Background video with optimized loading */}
-      <div className={`absolute inset-0 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute top-0 left-0 w-full h-full object-cover"
+    <div className="bg-black">
+      <div className="relative isolate px-6 pt-4 lg:px-8">
+        {/* Animated top background pattern */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          animate={{
+            x: [0, 25, 0],
+            y: [0, 15, 0],
+            rotate: [0, 5, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         >
-          <source src="https://videos.pexels.com/video-files/7103565/7103565-uhd_2560_1440_25fps.mp4" type="video/mp4" />
-          {/* Fallback image for browsers that don't support video */}
-          <img 
-            src="/api/placeholder/1920/1080" 
-            alt="Creative design workspace" 
-            className="absolute top-0 left-0 w-full h-full object-cover"
-          />
-        </video>
-      </div>
-
-      {/* Dynamic gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70 z-10" />
-
-      {/* Wave SVG divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20">
-        <svg
-          viewBox="0 0 1440 320"
-          className="w-full h-20 md:h-32 fill-white"
-          preserveAspectRatio="none"
-        >
-          <motion.path 
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ 
-              pathLength: 1, 
-              opacity: 1,
-              transition: { duration: 1.5, delay: 0.8, ease: "easeInOut" }
+          <motion.div
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
             }}
-            d="M0,256L48,234.7C96,213,192,171,288,149.3C384,128,480,128,576,133.3C672,139,768,149,864,154.7C960,160,1056,160,1152,165.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" 
-            stroke="rgba(255,255,255,0.3)"
-            strokeWidth="2"
+            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#DB3246] to-[#DB3246] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.4, 0.3],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
           />
-        </svg>
-      </div>
-      
-      {/* Content container */}
-      <div className="relative z-20 flex flex-col items-center justify-center w-full h-full px-6 md:px-8">
-        <motion.div 
-          className="max-w-4xl text-center"
-          initial="hidden"
-          animate={isLoaded ? "visible" : "hidden"}
-        >
-          {/* Creative brand signature */}
-          <motion.div 
-            custom={0}
-            variants={textVariants}
-            className="mb-3 text-xs md:text-sm tracking-widest text-white/80 uppercase font-light"
-          >
-            Where vision meets execution
-          </motion.div>
-          
-          {/* Main headline */}
-          <motion.h1 
-            custom={1}
-            variants={textVariants}
-            className="text-4xl md:text-5xl lg:text-4xl font-bold tracking-tight text-white"
-          >
-            Guava Creative Studio
-          </motion.h1>
-
-          {/* Animated divider */}
-          <div className="relative mt-4 max-w-sm mx-auto overflow-hidden">
-            <motion.div 
-              variants={dividerVariants}
-              className="h-px bg-gradient-to-r from-transparent via-white to-transparent"
-            />
-          </div>
-
-          {/* Compelling tagline */}
-          <motion.p 
-            custom={2}
-            variants={textVariants}
-            className="max-w-lg mx-auto mt-8 md:mt-10 text-sm font-light leading-relaxed text-white/90 md:text-base lg:text-lg"
-          >
-            We don't just design—we transform. Crafting digital experiences that captivate, 
-            convert, and create lasting emotional connections with your audience.
-          </motion.p>
-
-          {/* CTA button with animation */}
-          <motion.div 
-            className="mt-10 md:mt-14"
-            variants={textVariants}
-            custom={3}
-          >
-            <motion.button 
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-              className="px-10 py-4 text-sm font-medium tracking-wider text-white uppercase transition-all duration-300 bg-[#db3246] rounded-full shadow-lg shadow-[#db3246]/20"
-            >
-              See Our Masterpieces
-            </motion.button>
-          </motion.div>
-          
-         
         </motion.div>
+
+        {/* Hero content */}
+        <div className="mx-auto max-w-2xl py-32">
+          <motion.div 
+            className="hidden sm:mb-8 sm:flex sm:justify-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="relative rounded-full px-3 py-1 text-sm/6 text-white ring-1 ring-white hover:ring-gray-900/20">
+              Creative by nature. Precise by design.{' '}
+              <a href="#" className="font-semibold text-[#DB3246]">
+                <span aria-hidden="true" className="absolute inset-0" />
+                Read more <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </motion.div>
+          
+          <div className="text-center">
+            <motion.h1 
+              className="text-5xl font-semibold tracking-tight text-balance text-white"
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Creative by nature. Precise by design.
+            </motion.h1>
+            
+            <motion.p 
+              className="mt-8 text-lg font-medium text-pretty text-white sm:text-xl/8"
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              We craft digital experiences that are fast, fearless, and unforgettable. Strategy meets storytelling. Design meets impact.
+            </motion.p>
+            
+            <motion.div 
+              className="mt-10 flex items-center justify-center gap-x-6"
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <motion.a
+                href="#"
+                className="rounded-full bg-[#DB3246] px-7 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-[#DB3246] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Build with Guava
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="text-sm/6 font-semibold text-white"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                See our work <span aria-hidden="true">→</span>
+              </motion.a>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Animated bottom background pattern */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+          animate={{
+            x: [0, -25, 0],
+            y: [0, -15, 0],
+            rotate: [0, -5, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <motion.div
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#DB3246] to-[#DB3246] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+          />
+        </motion.div>
+        
+        {/* Additional floating elements for visual interest */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 h-16 w-16 rounded-full bg-[#DB3246] opacity-10 blur-xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <motion.div
+          className="absolute bottom-1/3 right-1/3 h-24 w-24 rounded-full bg-[#DB3246] opacity-10 blur-xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        />
       </div>
     </div>
-  );
-};
-
-export default HeroSection;
+  )
+}
