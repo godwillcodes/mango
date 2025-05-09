@@ -72,7 +72,7 @@ const Header = () => {
                 <div className="flex items-center gap-4">
                     <Link
                         href="#contact"
-                        className="inline-flex items-center px-5 py-2 text-sm font-nexa-heavy text-black bg-white rounded-full
+                        className="inline-flex items-center px-5 py-2 text-sm border-2 border-white font-nexa-heavy text-white bg-[#db3246] rounded-full
               hover:bg-white/90 focus:bg-white/90 active:scale-[0.98]
               transition-all duration-200 
               focus-visible:outline-white focus-visible:outline-offset-4 focus-visible:outline-2 focus-visible:rounded-full
@@ -123,7 +123,7 @@ const Header = () => {
                     <hr className="border-white/20 my-1" />
                     <Link
                         href="#contact"
-                        className="py-3 px-4 bg-white text-black rounded-lg
+                        className="py-3 px-4 bg-black text-white rounded-lg
               hover:bg-white/90 transition-colors
               focus-visible:outline-white focus-visible:outline-offset-4 focus-visible:outline-2 focus-visible:rounded-lg"
                         onClick={() => setMobileMenuOpen(false)}
