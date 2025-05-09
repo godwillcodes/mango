@@ -12,7 +12,7 @@ const Header = () => {
     // Handle scroll behavior for shadow and background opacity
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
+            setIsScrolled(window.scrollY > 900);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -29,7 +29,7 @@ const Header = () => {
                 className={`w-full rounded-full py-3 md:py-4 px-4 sm:px-6 lg:px-8
           flex items-center justify-between
           ${isScrolled
-                        ? 'bg-[#db3246]/95 backdrop-blur-sm shadow-lg'
+                        ? 'bg-[#db3246] backdrop-blur-sm shadow-lg'
                         : 'bg-[#db3246] shadow-md'}`}
                 aria-label="Main navigation"
             >
