@@ -67,7 +67,7 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [hoveringNav, setHoveringNav] = useState(false);
+  const [hoveringNav, setHoveringNav] = useState<"next" | "prev" | false>(false);
   const controls = useAnimation();
   const carouselRef = useRef<HTMLDivElement>(null);
   
@@ -177,12 +177,12 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
 
   return (
     <div 
-      className="relative w-full h-screen bg-black overflow-hidden"
+      className="relative  w-full h-[55vh] bg-black rounded-t-[50px] overflow-hidden"
       onMouseMove={updateCursorPosition}
     >
       {/* Custom Cursor */}
       <motion.div
-        className="fixed top-0 left-0 z-50 flex items-center justify-center rounded-full bg-white bg-opacity-20 pointer-events-none border border-white border-opacity-40 backdrop-blur-sm"
+        className="fixed top-0 left-0 z-50 flex items-center justify-center rounded-full bg-white/10 bg-opacity-20 pointer-events-none border border-white border-opacity-40 backdrop-blur-sm"
         variants={cursorVariants}
         initial="default"
         animate={hoveringNav ? "hover" : "default"}
@@ -193,7 +193,7 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            {hoveringNav === 'next' ? 'Next' : 'Prev'}
+            {hoveringNav && (hoveringNav === 'next' ? 'Next' : 'Prev')}
           </motion.div>
         )}
       </motion.div>
@@ -209,25 +209,12 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
         </svg>
       </div>
 
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-8 md:p-12">
-        <div className="text-white">
-          <div className="text-sm font-medium tracking-widest uppercase text-white/70">Selected work</div>
-        </div>
-        
-        {/* Progress bar */}
-        <div className="w-24 md:w-40 h-px bg-white/20 overflow-hidden">
-          <motion.div 
-            className="h-full bg-white"
-            animate={progressControls}
-          />
-        </div>
-      </div>
+      
 
       {/* Main carousel */}
       <div 
         ref={carouselRef} 
-        className="w-full h-full"
+        className=" h-full"
       >
         <motion.div
           className="w-full h-full cursor-grab active:cursor-grabbing"
@@ -254,7 +241,7 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
                 animate={{ scale: 1 }}
                 transition={{ duration: 1.2, ease: [0.32, 0.72, 0, 1] }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-black/20 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t to-[#DB3246]/40 from-black/50 z-10" />
                 <Image
                   src={projects[currentIndex].image}
                   alt={projects[currentIndex].title}
@@ -278,11 +265,11 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
                     <span className="text-sm font-medium text-white/70">{projects[currentIndex].client}</span>
                   </div>
                   
-                  <h2 className="text-4xl md:text-5xl lg:text-7xl font-medium text-white tracking-tight mb-4">
+                  <h2 className="text-4xl font-medium text-white tracking-tight mb-4">
                     {projects[currentIndex].title}
                   </h2>
                   
-                  <p className="text-white/80 max-w-lg mb-6">
+                  <p className="text-white max-w-lg mb-6">
                     {projects[currentIndex].description}
                   </p>
                   
@@ -304,7 +291,7 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
                   {projects[currentIndex].tags.map((tag, index) => (
                     <span 
                       key={index} 
-                      className="px-3 py-1 text-xs font-medium text-white/80 border border-white/20 rounded-full"
+                      className="px-3 py-1 text-sm font-medium text-white/80 border border-white/20 rounded-full"
                     >
                       {tag}
                     </span>
@@ -342,11 +329,7 @@ export default function PortfolioCarousel({ projects = projectData }: PortfolioC
       </div>
       
       {/* Page counter */}
-      <div className="absolute bottom-8 md:bottom-16 left-8 md:left-16 z-30 text-white/70 text-sm font-medium">
-        <span className="text-white">{String(currentIndex + 1).padStart(2, '0')}</span>
-        <span className="mx-2">/</span>
-        <span>{String(projects.length).padStart(2, '0')}</span>
-      </div>
+     
     </div>
   );
 }

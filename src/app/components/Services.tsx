@@ -152,7 +152,7 @@ export default function Services() {
   );
 
   return (
-    <div className="relative bg-white py-12 overflow-hidden">
+    <div className="relative bg-white pb-12 overflow-hidden">
       <BackgroundPattern />
      
       <div className="mx-auto max-w-6xl px-6 lg:px-0">
